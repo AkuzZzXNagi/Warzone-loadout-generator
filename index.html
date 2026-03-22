@@ -6,10 +6,56 @@
 <style>
 body {
   font-family: Arial;
-  background: linear-gradient(180deg,#0a0f1c,#02040a);
+  background: radial-gradient(ellipse at bottom, #0b0c2a 0%, #000000 100%);
   color: white;
   text-align: center;
+  overflow: hidden;
 }
+  
+.stars {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  animation: moveStars 60s linear infinite;
+  z-index: -1;
+}
+  
+.stars2 {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  animation: moveStars 120s linear infinite;
+  opacity: 0.5;
+  z-index: -1;
+}
+  
+.twinkling {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+  animation: moveStars 200s linear infinite, twinkle 3s infinite alternate;
+  opacity: 0.4;
+  z-index: -1;
+}
+  
+@keyframes moveStars {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-500px, -500px);
+  }
+}
+  
+@keyframes twinkle {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.2; }
+}
+  
 h1 {margin:20px;font-size:32px;letter-spacing:2px}
 button {
   padding:15px 30px;font-size:18px;border:none;border-radius:8px;
@@ -75,16 +121,25 @@ img {width:100%;border-radius:10px}
   80% { text-shadow:2px 0 red, -2px 0 blue; }
   100% { text-shadow:none; }
 }
-  to {
-    box-shadow:0 0 20px #22c55e, 0 0 40px #22c55e;
-  }
-} 
-  to {opacity:1; transform:translateY(0);} 
+
+.shooting-star {
+  position: fixed;
+  width: 3px;
+  height: 100px;
+  background: linear-gradient(white, transparent);
+  opacity: 0;
+  transform: rotate(45deg);
+  z-index: 0;
 }
+  
 </style>
 </head>
 <body>
 
+<div class="stars"></div>
+<div class="stars2"></div>
+<div class="twinkling"></div>
+  
 <h1>🎯 WARZONE GENERATOR</h1>
 <div class="credit">
   <span>Créé par :</span>
@@ -264,6 +319,39 @@ if(confirm("Supprimer toutes les classes ?")){
   loadClasses();
 }
 }
+
+function createShootingStar() {
+  const star = document.createElement("div");
+  star.className = "shooting-star";
+
+  document.body.appendChild(star);
+
+  const startX = Math.random() * window.innerWidth;
+  const startY = Math.random() * window.innerHeight;
+
+  star.style.left = startX + "px";
+  star.style.top = startY + "px";
+
+  star.style.opacity = 1;
+
+  star.animate([
+    { transform: "translate(0,0) rotate(45deg)", opacity: 1 },
+    { transform: "translate(600px,600px) rotate(45deg)", opacity: 0 }
+  ], {
+    duration: 1000,
+    easing: "ease-out"
+  });
+
+  // Supprime l’étoile après animation
+  setTimeout(() => {
+    star.remove();
+  }, 1000);
+}
+
+// étoiles aléatoires
+setInterval(() => {
+  createShootingStar();
+}, 2000);
   
 </script>
 </body>
