@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Warzone BO7 Generator</title>
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(180deg,#0a0f1c,#02040a);
+  color: white;
+  text-align: center;
+}
+h1 {margin:20px;font-size:32px;letter-spacing:2px}
+button {
+  padding:15px 30px;font-size:18px;border:none;border-radius:8px;
+  background:#22c55e;color:black;font-weight:bold;cursor:pointer;
+  box-shadow:0 0 15px #22c55e;
+}
+.wheel {
+  width:220px;height:220px;border-radius:50%;margin:30px auto;
+  background:conic-gradient(#22c55e,#38bdf8,#f59e0b,#ef4444,#a855f7);
+  transition:transform 3s ease-out;
+}
+.card {
+  background:rgba(0,0,0,0.9);
+  border:1px solid #22c55e;border-radius:12px;
+  padding:20px;margin:20px auto;width:380px;
+}
+.weapon {font-size:26px;color:#22c55e;margin-bottom:10px}
+img {width:100%;border-radius:10px}
+.accessory {
+  background:rgba(34,197,94,0.1);
+  border-left:5px solid #22c55e;
+  padding:10px;margin:8px 0;font-size:20px;text-align:left;
+}
+.credit {
+  margin-top:-10px;
+  font-size:18px;
+  color:#a7f3d0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  text-shadow:0 0 8px #22c55e;
+  animation:fadeIn 1s ease;
+}
+.logo {
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  box-shadow:0 0 10px #22c55e, 0 0 20px #22c55e;
+  animation:neonPulse 1.5s infinite alternate;
+}
+.name {
+  color:#22c55e;
+  font-weight:bold;
+  position:relative;
+  animation:glitch 1.5s infinite;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(-10px);} 
+  to {opacity:1; transform:translateY(0);} 
+}
+
+@keyframes neonPulse {
+  from { box-shadow:0 0 5px #22c55e, 0 0 10px #22c55e; }
+  to { box-shadow:0 0 20px #22c55e, 0 0 40px #22c55e; }
+}
+
+@keyframes glitch {
+  0% { text-shadow:2px 0 red, -2px 0 blue; }
+  20% { text-shadow:-2px 0 red, 2px 0 blue; }
+  40% { text-shadow:2px 2px red, -2px -2px blue; }
+  60% { text-shadow:-2px -2px red, 2px 2px blue; }
+  80% { text-shadow:2px 0 red, -2px 0 blue; }
+  100% { text-shadow:none; }
+}
+  to {
+    box-shadow:0 0 20px #22c55e, 0 0 40px #22c55e;
+  }
+} 
+  to {opacity:1; transform:translateY(0);} 
+}
+</style>
+</head>
+<body>
+
+<h1>🎯 WARZONE GENERATOR</h1>
+<div class="credit">
+  <span>Créé par :</span>
+  <img src="https://i.imgur.com/placeholder.png" class="logo">
+  <span class="name">AkuzZz</span>
+</div>
+<div class="wheel" id="wheel"></div>
+<button onclick="spin()">LANCER 🎰</button>
+<button onclick="saveClass()">💾 Sauvegarder</button>
+<button onclick="loadClasses()">📂 Mes classes</button>
+<button onclick="clearClasses()">🗑️ Reset</button>
+
+<div id="result"></div>
+<div id="saved"></div>
+
+<script>
+
+const weapons = [
+// IMPORTANT: ajout des catégories (cat) pour corriger le bug
+// Fusils d’assaut
+{name:"M15 Mod 0",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"AK-27",cat:"AR",lunette:[1,31],canon:[1,6],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"MXR-17",cat:"AR",lunette:[1,31],canon:[1,6],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"X9 Maverick",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,9],chargeur:null,poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"DS20 Mirage",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,6],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"Peacekeeper MK1",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"Maddox RFB",cat:"AR",lunette:[1,31],canon:[1,6],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"EGRT-17",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,3]},
+{name:"Voyak KT-3",cat:"AR",lunette:[1,31],canon:[1,5],accessoireCanon:[1,9],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+
+// SMG
+{name:"Ryden 45k",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"RK-9",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"Carbon 57",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"Dravec 45",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:null,chargeur:[1,3],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"MPC-25",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[1,6],laser:[1,6],mod:[1,4]},
+{name:"Kogot-7",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[1,6],laser:[1,5],mod:[1,4]},
+{name:"Sturmwolf 45",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,6]},
+{name:"REV-46",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"Razor 9mm",cat:"SMG",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,5]},
+
+// Fusils à pompe
+{name:"M10 Breacher",cat:"Shotgun",lunette:[1,19],canon:[1,5],accessoireCanon:[1,4],chargeur:null,poignee:null,crosse:[1,7],laser:[1,5],mod:[1,4]},
+{name:"Echo 12",cat:"Shotgun",lunette:[1,19],canon:[1,5],accessoireCanon:null,chargeur:[1,2],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,5]},
+{name:"Akita",cat:"Shotgun",lunette:[1,19],canon:[1,5],accessoireCanon:[1,4],chargeur:[1,4],poignee:[1,5],crosse:[1,6],laser:[1,5],mod:[1,4]},
+{name:"SG-12",cat:"Shotgun",lunette:[1,19],canon:[1,5],accessoireCanon:[1,4],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,6],mod:[1,4]},
+
+// LMG
+{name:"Sokol 545",cat:"LMG",lunette:[1,26],canon:[1,5],accessoireCanon:[1,6],chargeur:[1,5],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"Mk.78",cat:"LMG",lunette:[1,26],canon:[1,5],accessoireCanon:[1,6],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"XM325",cat:"LMG",lunette:[1,26],canon:[1,5],accessoireCanon:[1,6],chargeur:[1,3],poignee:[1,5],crosse:[1,6],laser:[1,5],mod:[1,4]},
+
+// Fusils tactiques
+{name:"Espadon A1",cat:"Tactique",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,5]},
+{name:"M34 Novaline",cat:"Tactique",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"M8A1",cat:"Tactique",lunette:[1,27],canon:[1,6],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"Warden 308",cat:"Tactique",lunette:[1,27],canon:null,accessoireCanon:null,chargeur:[0,1],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+
+// Snipers
+{name:"Hawker HX",cat:"Sniper",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,4],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"XR-3 Ion",cat:"Sniper",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"Shadow SK",cat:"Sniper",lunette:[1,27],canon:[1,5],accessoireCanon:null,chargeur:[1,3],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+{name:"VS Recon",cat:"Sniper",lunette:[1,27],canon:[1,5],accessoireCanon:[1,5],chargeur:[1,3],poignee:[1,5],crosse:[1,5],laser:[1,5],mod:[1,4]},
+
+// Pistolets
+{name:"Jäger 45",cat:"Pistolet",lunette:[1,10],canon:[1,5],accessoireCanon:null,chargeur:[1,3],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"Velox 5.7",cat:"Pistolet",lunette:[1,10],canon:[1,5],accessoireCanon:null,chargeur:[1,3],poignee:[1,5],crosse:[0,1],laser:[1,5],mod:[1,4]},
+{name:"Coda 9",cat:"Pistolet",lunette:[1,10],canon:[1,5],accessoireCanon:null,chargeur:[1,3],poignee:[1,5],crosse:[1,2],laser:[1,10],mod:[1,4]},
+
+// Lanceurs
+{name:"Aarow 109",cat:"Lanceur"},
+{name:"A.R.C. M1",cat:"Lanceur"},
+
+// Spéciales
+{name:"GDL Havoc",cat:"Spéciale",chargeur:[0,1],poignee:[1,5]},
+{name:"NX Ravager",cat:"Spéciale",lunette:[0,2],chargeur:[0,1],mod:[0,1]}
+];
+
+let lastClassHTML = "";
+
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+
+function generateWeapon(w){
+let list=[];
+if(w.lunette) list.push({n:"🔭 Lunette",v:()=>rand(w.lunette[0],w.lunette[1])});
+if(w.canon) list.push({n:"📏 Canon",v:()=>rand(w.canon[0],w.canon[1])});
+if(w.accessoireCanon) list.push({n:"🧩 Accessoire",v:()=>rand(w.accessoireCanon[0],w.accessoireCanon[1])});
+if(w.chargeur) list.push({n:"📦 Chargeur",v:()=>rand(w.chargeur[0],w.chargeur[1])});
+if(w.poignee) list.push({n:"✋ Poignée",v:()=>rand(w.poignee[0],w.poignee[1])});
+if(w.crosse) list.push({n:"🏹 Crosse",v:()=>rand(w.crosse[0],w.crosse[1])});
+if(w.laser) list.push({n:"🎯 Laser",v:()=>rand(w.laser[0],w.laser[1])});
+if(w.mod) list.push({n:"⚙️ Mod",v:()=>rand(w.mod[0],w.mod[1])});
+
+let pick=[...list].sort(()=>Math.random()-0.5).slice(0,5);
+
+let html=`<div class='card'><div class='weapon'>${w.name}</div><img src='${w.img}'>`;
+pick.forEach(a=>{html+=`<div class='accessory'>${a.n}: ${a.v()}</div>`});
+html+="</div>";
+return html;
+}
+
+function spin(){
+let wheel=document.getElementById("wheel");
+wheel.style.transform=`rotate(${Math.random()*1080}deg)`;
+
+setTimeout(()=>{
+let w1=weapons[Math.floor(Math.random()*weapons.length)];
+let w2;
+
+do {
+  w2 = weapons[Math.floor(Math.random()*weapons.length)];
+} while (w2.name === w1.name || w2.cat === w1.cat);
+
+lastClassHTML =
+"<h2>Classe générée</h2>"+
+"<h3>Principale</h3>"+generateWeapon(w1)+
+"<h3>Secondaire</h3>"+generateWeapon(w2);
+
+document.getElementById("result").innerHTML = lastClassHTML;
+
+},3000);
+}
+
+function saveClass(){
+if(!lastClassHTML){
+  alert("⚠️ Génère une classe d'abord !");
+  return;
+}
+
+let classes = JSON.parse(localStorage.getItem("classes") || "[]");
+
+classes.push({
+  id: Date.now(),
+  content: lastClassHTML
+});
+
+localStorage.setItem("classes", JSON.stringify(classes));
+
+alert("✅ Classe sauvegardée !");
+}
+  
+function loadClasses(){
+let classes = JSON.parse(localStorage.getItem("classes") || "[]");
+
+if(classes.length === 0){
+  document.getElementById("saved").innerHTML = "<p>Aucune classe sauvegardée</p>";
+  return;
+}
+
+let html = "<h2>📂 Mes classes</h2>";
+
+classes.forEach((c,i)=>{
+  html += `
+  <div class="card">
+    <h3>Classe ${i+1}</h3>
+    ${c.content}
+    <button onclick="deleteClass(${c.id})">❌ Supprimer</button>
+  </div>`;
+});
+
+document.getElementById("saved").innerHTML = html;
+}
+  
+function deleteClass(id){
+let classes = JSON.parse(localStorage.getItem("classes") || "[]");
+
+classes = classes.filter(c => c.id !== id);
+
+localStorage.setItem("classes", JSON.stringify(classes));
+
+loadClasses();
+}
+  
+function clearClasses(){
+if(confirm("Supprimer toutes les classes ?")){
+  localStorage.removeItem("classes");
+  loadClasses();
+}
+}
+  
+</script>
+</body>
+</html>
