@@ -218,6 +218,44 @@ const weapons = [
 {name:"NX Ravager",cat:"Spéciale",lunette:[0,2],chargeur:[0,1],mod:[0,1]}
 ];
 
+const perks = {
+  perk1: [
+    "Sergent instructeur",
+    "Pillard",
+    "Examinateur",
+    "Alpiniste",
+    "Médecin de terrain"
+  ],
+  perk2: [
+    "Sprinteur",
+    "Armure réactive",
+    "Régénération rapide",
+    "Berserker",
+    "Momentum"
+  ],
+  perk3: [
+    "Survivant",
+    "Adaptation",
+    "Trempé",
+    "Fantôme",
+    "Chasseur"
+  ]
+};
+  
+function generatePerks(){
+  let p1 = perks.perk1[Math.floor(Math.random()*perks.perk1.length)];
+  let p2 = perks.perk2[Math.floor(Math.random()*perks.perk2.length)];
+  let p3 = perks.perk3[Math.floor(Math.random()*perks.perk3.length)];
+
+  return `
+  <div class="card">
+    <h3>🎯 Atouts</h3>
+    <div class="accessory">🥇 Atout 1 : ${p1}</div>
+    <div class="accessory">🥈 Atout 2 : ${p2}</div>
+    <div class="accessory">🥉 Atout 3 : ${p3}</div>
+  </div>`;
+}
+  
 let lastClassHTML = "";
 
 function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
@@ -256,7 +294,8 @@ do {
 lastClassHTML =
 "<h2>Classe générée</h2>"+
 "<h3>Principale</h3>"+generateWeapon(w1)+
-"<h3>Secondaire</h3>"+generateWeapon(w2);
+"<h3>Secondaire</h3>"+generateWeapon(w2)+
+generatePerks();
 
 document.getElementById("result").innerHTML = lastClassHTML;
 
