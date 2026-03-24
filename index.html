@@ -273,7 +273,7 @@ if(w.mod) list.push({n:"⚙️ Mod",v:()=>rand(w.mod[0],w.mod[1])});
 
 let pick=[...list].sort(()=>Math.random()-0.5).slice(0,5);
 
-let html=`<div class='card'><div class='weapon'>${w.name}</div><img src='${w.img}'>`;
+let html=`<div class='card'><div class='weapon'>${w.name}</div><img src='${w.img || "https://via.placeholder.com/400x200?text="+encodeURIComponent(w.name)}'>`;
 pick.forEach(a=>{html+=`<div class='accessory'>${a.n}: ${a.v()}</div>`});
 html+="</div>";
 return html;
